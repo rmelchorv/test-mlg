@@ -11,6 +11,6 @@ Solución web con 2 proyectos:
   - API-Rest entry-points
 - Front: Angular 18
   
-- BD (local) SQL-Server 2022: Script /TestMLG.sql
 - DEV-environment: Linux Ubuntu 22.04
+- BD: SQL-Server 2022: Script /TestMLG.sql
 - IDE: VS Code
