@@ -1,2 +1,2 @@
 # test-mlg
-.NET-Dev eval
+.NET-DEV eval
