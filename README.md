@@ -1,7 +1,7 @@
 # test-mlg
 .NET-DEV eval
 
-https://localhost:5179/swagger/index.html
+http://localhost:5179/swagger/index.html
 
 Solución web con 2 proyectos:
 
