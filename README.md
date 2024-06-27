@@ -10,6 +10,7 @@ Solución web con 2 proyectos:
   - Services
   - API-Rest entry-points
 - Front: angular 18
+  
 - BD (local) SQL-Server 2022: Script /TestMLG.sql
-- Ambiente de desarrollo: Linux Ubuntu 22.04
+- Entorno de desarrollo: Linux Ubuntu 22.04
 - IDE: VS Code
