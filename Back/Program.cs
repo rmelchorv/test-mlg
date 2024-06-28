@@ -58,6 +58,7 @@ app.MapGet("/", () => Results.Content($"""
     <!DOCTYPE html>
     <html>
         <head>
+            <meta http-equiv="refresh" content="0; url=http://localhost:5179/swagger/index.html">
             <meta charset=""utf-8"" />
             <title>TestMLG API</title>
         </head>
