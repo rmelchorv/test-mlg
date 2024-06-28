@@ -20,13 +20,21 @@ builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<ICompraService, CompraService>();
 builder.Services.AddScoped<ITiendumService, TiendumService>();
 
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApiDocument(config =>
-{
-    config.DocumentName = "TestMLG API";
-    config.Title = "TestMLG API v1";
+builder.Services.AddOpenApiDocument(config => {
+    config.DocumentName = "api";
+    config.Title = "TestMLG API";
     config.Version = "v1";
 });
 #endregion
@@ -37,8 +45,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
-    app.UseSwaggerUi(config =>
-    {
+    app.UseSwaggerUi(config => {
         config.DocumentTitle = "TestMLG API";
         config.Path = "/swagger";
         config.DocumentPath = "/swagger/{documentName}/swagger.json";
@@ -46,8 +53,26 @@ if (app.Environment.IsDevelopment())
     });
 }
 #endregion
-#region "API-Rest"
-app.MapGet("/articulo/lista", 
+#region "Routing"
+app.MapGet("/", () => Results.Content($"""
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset=""utf-8"" />
+            <title>TestMLG API</title>
+        </head>
+        <body>
+            <h1>TestMLG API</h1>
+            <ul>
+                <li>
+                    <a href="swagger">Show API</a>
+                </li>
+            </ul>
+        </body>
+    </html>
+""", "text/html"));
+
+var r = app.MapGet("/articulo/lista", 
     async(IArticuloService _service, IMapper _mapper) => {
         var articulos = await _service.GetArticulos();
         var articulosDTO = _mapper.Map<List<ArticuloDTO>>(articulos);
@@ -58,6 +83,9 @@ app.MapGet("/articulo/lista",
             Results.NotFound();
     }
 );
+
+int i = 0;
+
 app.MapGet("/articulo/{idArticulo}", 
     async(int idArticulo, IArticuloService _service, IMapper _mapper) => {
         var articulo = await _service.GetArticulo(idArticulo);
@@ -148,5 +176,6 @@ app.MapGet("/tienda/lista",
 );
 #endregion
 
+app.UseCors("AllowAll");
 app.Run();
  

@@ -10,8 +10,9 @@ public class AutoMapperProfile : Profile {
   public AutoMapperProfile() {
     CreateMap<Articulo, ArticuloDTO>();
     CreateMap<ArticuloDTO, Articulo>()
-      .ForMember(a => a.ArticuloTienda, opt => opt.Ignore())
-      .ForMember(a => a.ClienteArticulos, opt => opt.Ignore());
+      .ForMember(dest => dest.Id, opt => opt.Ignore())
+      .ForMember(dest => dest.ArticuloTienda, opt => opt.Ignore())
+      .ForMember(dest => dest.ClienteArticulos, opt => opt.Ignore());
     
     CreateMap<Cliente, ClienteDTO>().ReverseMap();
     CreateMap<Tiendum, TiendumDTO>().ReverseMap();
