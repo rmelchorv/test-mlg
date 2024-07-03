@@ -45,7 +45,7 @@ public class ArticuloTiendumService : IArticuloTiendumService
   public async Task<bool> DeleteArticuloTiendum(int idArticulo, int idTiendum)
   {
     var articuloTiendum = await GetArticuloTiendum(idArticulo, idTiendum);
-    if (articuloTiendum == null)
+    if (articuloTiendum is null)
       return false;
 
     _dbContext.ArticuloTienda.Remove(articuloTiendum);

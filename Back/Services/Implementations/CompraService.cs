@@ -27,12 +27,10 @@ public class CompraService : ICompraService
     return compra;
   }
 
-  public async Task<Compra> InsertCompra(Compra compra)
+  public async Task<bool> InsertCompra(Compra compra)
   {
     _dbContext.Compras.Add(compra);
-    await _dbContext.SaveChangesAsync();
-    
-    return compra;
+    return await _dbContext.SaveChangesAsync() > 0;
   }
 
   public async Task<bool> UpdateCompra(Compra compra)
@@ -44,7 +42,7 @@ public class CompraService : ICompraService
   public async Task<bool> DeleteCompra(int id)
   {
     var compra = await GetCompra(id);
-    if (compra == null)
+    if (compra is null)
       return false;
 
     _dbContext.Compras.Remove(compra);

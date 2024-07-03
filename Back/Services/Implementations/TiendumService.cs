@@ -38,7 +38,7 @@ public class TiendumService : ITiendumService
   public async Task<bool> DeleteTiendum(int id)
   {
     var tiendum = await GetTiendum(id);
-    if (tiendum == null)
+    if (tiendum is null)
       return false;
 
     _dbContext.Tienda.Remove(tiendum);

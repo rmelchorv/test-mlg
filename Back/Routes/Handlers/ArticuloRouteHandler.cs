@@ -33,10 +33,6 @@ public class ArticuloRouteHandler
     var articulo = mapper.Map<Articulo>(model);
     var respuesta = await service.InsertArticulo(articulo);
 
-    //if (articuloCreado.Id != 0)
-    //    Results.Ok(_mapper.Map<ArticuloDTO>(articuloCreado));
-    //else
-    //    Results.StatusCode(StatusCodes.Status500InternalServerError);
     if (!respuesta)
       return TypedResults.BadRequest();
 
@@ -46,12 +42,12 @@ public class ArticuloRouteHandler
 
   public static async Task<IResult> Update(int id, ArticuloDTO model, IArticuloService service, IMapper mapper) {
     var existente = await service.GetArticulo(id);
-    
+
     if (existente is null)
       TypedResults.NotFound();
 
     var articulo = mapper.Map<Articulo>(model);
-    
+
     existente.Codigo = articulo.Codigo;
     existente.Descripcion = articulo.Descripcion;
     existente.Precio = articulo.Precio;
@@ -62,7 +58,7 @@ public class ArticuloRouteHandler
 
     if (!respuesta)
       TypedResults.BadRequest();
-  
+
     return TypedResults.NoContent();
   }
 

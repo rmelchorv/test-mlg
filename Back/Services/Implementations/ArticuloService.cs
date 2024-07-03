@@ -31,7 +31,6 @@ public class ArticuloService : IArticuloService
 
   public async Task<bool> UpdateArticulo(Articulo articulo)
   {
-    //_dbContext.Articulos.Update(articulo);
     _dbContext.Entry(articulo).State = EntityState.Modified;
     return await _dbContext.SaveChangesAsync() > 0;
   }
@@ -39,7 +38,7 @@ public class ArticuloService : IArticuloService
   public async Task<bool> DeleteArticulo(int id)
   {
     var articulo = await GetArticulo(id);
-    if (articulo == null)
+    if (articulo is null)
       return false;
 
     _dbContext.Articulos.Remove(articulo);

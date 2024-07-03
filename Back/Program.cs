@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using NSwag.AspNetCore;
-using Back.DTOs;
 using Back.Models;
+using Back.Routes.Handlers;
 using Back.Services.Contracts;
 using Back.Services.Implementations;
 using Back.Utils;
@@ -23,8 +21,7 @@ builder.Services.AddScoped<ITiendumService, TiendumService>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
 builder.Services.AddCors(options => {
-    options.AddPolicy("AllowAll", builder =>
-    {
+    options.AddPolicy("AllowAll", builder => {
         builder.AllowAnyOrigin()
                .AllowAnyMethod()
                .AllowAnyHeader();
@@ -42,8 +39,7 @@ builder.Services.AddOpenApiDocument(config => {
 var app = builder.Build();
 
 #region "Swagger"
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseOpenApi();
     app.UseSwaggerUi(config => {
         config.DocumentTitle = "TestMLG API";
@@ -54,129 +50,49 @@ if (app.Environment.IsDevelopment())
 }
 #endregion
 #region "Routing"
-app.MapGet("/", () => Results.Content($"""
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <meta http-equiv="refresh" content="0; url=http://localhost:5179/swagger/index.html">
-            <meta charset=""utf-8"" />
-            <title>TestMLG API</title>
-        </head>
-        <body>
-            <h1>TestMLG API</h1>
-            <ul>
-                <li>
-                    <a href="swagger">Show API</a>
-                </li>
-            </ul>
-        </body>
-    </html>
-""", "text/html"));
-
-var r = app.MapGet("/articulo/lista", 
-    async(IArticuloService _service, IMapper _mapper) => {
-        var articulos = await _service.GetArticulos();
-        var articulosDTO = _mapper.Map<List<ArticuloDTO>>(articulos);
-
-        if (articulosDTO.Count > 0)
-            Results.Ok(articulosDTO);
-        else
-            Results.NotFound();
-    }
-);
-
-int i = 0;
-
-app.MapGet("/articulo/{idArticulo}", 
-    async(int idArticulo, IArticuloService _service, IMapper _mapper) => {
-        var articulo = await _service.GetArticulo(idArticulo);
-        var articuloDTO = _mapper.Map<ArticuloDTO>(articulo);
-
-        if (articuloDTO != null)
-            Results.Ok(articuloDTO);
-        else
-            Results.NotFound();
-    }
-);
-app.MapPost("/articulo/insertar", 
-    async(ArticuloDTO _model, IArticuloService _service, IMapper _mapper) => {
-        var articulo = _mapper.Map<Articulo>(_model);
-        var respuesta = await _service.InsertArticulo(articulo);
-
-        //if (articuloCreado.Id != 0)
-        //    Results.Ok(_mapper.Map<ArticuloDTO>(articuloCreado));
-        //else
-        //    Results.StatusCode(StatusCodes.Status500InternalServerError);
-        if (respuesta)
-            Results.Created($"/articulo/{articulo.Id}", _model);
-        else
-            Results.BadRequest();
-    }
-);
-app.MapPut("/articulo/actualizar/{idArticulo}", 
-    async(int idArticulo, ArticuloDTO _model, IArticuloService _service, IMapper _mapper) => {
-        var articuloExistente = await _service.GetArticulo(idArticulo);
-        
-        if (articuloExistente == null)
-            Results.NotFound();
-
-        var articulo = _mapper.Map<Articulo>(_model);
-        
-        articuloExistente.Codigo = articulo.Codigo;
-        articuloExistente.Descripcion = articulo.Descripcion;
-        articuloExistente.Precio = articulo.Precio;
-        articuloExistente.Imagen = articulo.Imagen;
-        articuloExistente.Stock = articulo.Stock;
-
-        var respuesta = await _service.UpdateArticulo(articuloExistente);
-
-        if (respuesta)
-            Results.Ok();
-        else
-            Results.BadRequest();
-    }
-);
-app.MapDelete("/articulo/eliminar/{idArticulo}",
-    async(int idArticulo, IArticuloService _service) => {
-        var articuloExistente = await _service.GetArticulo(idArticulo);
-
-        if (articuloExistente == null)
-            Results.NotFound();
-
-        var respuesta = await _service.DeleteArticulo(articuloExistente.Id);
-
-        if (respuesta)
-            Results.Ok();
-        else
-            Results.BadRequest();
-    }
-);
-
-app.MapGet("/cliente/lista", 
-    async(IClienteService _service, IMapper _mapper) => {
-        var clientes = await _service.GetClientes();
-        var clientesDTO = _mapper.Map<List<ClienteDTO>>(clientes);
-
-        if (clientesDTO.Count > 0)
-            Results.Ok(clientesDTO);
-        else
-            Results.NotFound();
-    }
-);
-
-app.MapGet("/tienda/lista", 
-    async(ITiendumService _service, IMapper _mapper) => {
-        var tiendas = await _service.GetTiendums();
-        var tiendasDTO = _mapper.Map<List<ArticuloDTO>>(tiendas);
-
-        if (tiendasDTO.Count > 0)
-            Results.Ok(tiendasDTO);
-        else
-            Results.NotFound();
-    }
-);
+#region Articulos
+app.MapGet("/articulos/", ArticuloRouteHandler.GetAll);
+app.MapGet("/articulo/{id}", ArticuloRouteHandler.GetById);
+app.MapPost("/articulo/", ArticuloRouteHandler.Create);
+app.MapPut("/articulo/{id}", ArticuloRouteHandler.Update);
+app.MapDelete("/articulo/{id}", ArticuloRouteHandler.Delete);
+#endregion
+#region Clientes
+app.MapGet("/clientes/", ClienteRouteHandler.GetAll);
+app.MapGet("/cliente/{id}", ClienteRouteHandler.GetById);
+app.MapPost("/cliente/", ClienteRouteHandler.Create);
+app.MapPut("/cliente/{id}", ClienteRouteHandler.Update);
+app.MapDelete("/cliente/{id}", ClienteRouteHandler.Delete);
+#endregion
+#region Tienda
+app.MapGet("/tiendas/", TiendaRouteHandler.GetAll);
+app.MapGet("/tienda/{id}", TiendaRouteHandler.GetById);
+app.MapPost("/tienda/", TiendaRouteHandler.Create);
+app.MapPut("/tienda/{id}", TiendaRouteHandler.Update);
+app.MapDelete("/tienda/{id}", TiendaRouteHandler.Delete);
+#endregion
+#region Compra
+app.MapGet("/compras/", CompraRouteHandler.GetAll);
+app.MapGet("/compra/{id}", CompraRouteHandler.GetById);
+app.MapPost("/compra/", CompraRouteHandler.Create);
+app.MapPut("/compra/{id}", CompraRouteHandler.Update);
+app.MapDelete("/commpra/{id}", CompraRouteHandler.Delete);
+#endregion
+#region Articulo-Tienda
+app.MapGet("/articulos-tiendas/", ArticuloTiendaRouteHandler.GetAll);
+app.MapGet("/articulo-tienda/{item}/{store}", ArticuloTiendaRouteHandler.GetById);
+app.MapPost("/articulo-tienda/", ArticuloTiendaRouteHandler.Create);
+app.MapPut("/articulo-tienda/", ArticuloTiendaRouteHandler.Update);
+app.MapDelete("/articulo-tienda/{item}/{store}", ArticuloTiendaRouteHandler.Delete);
+#endregion
+#region Compra-Articulo
+app.MapGet("/compras-articulos/", CompraArticuloRouteHandler.GetAll);
+app.MapGet("/compra-articulo/{purchase}/{item}", CompraArticuloRouteHandler.GetById);
+app.MapPost("/compra-articulo/",  CompraArticuloRouteHandler.Create);
+app.MapPut("/compra-articulo/",  CompraArticuloRouteHandler.Update);
+app.MapDelete("/compra-articulo/{purchase}/{item}",  CompraArticuloRouteHandler.Delete);
+#endregion
 #endregion
 
 app.UseCors("AllowAll");
 app.Run();
- 

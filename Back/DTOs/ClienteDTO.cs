@@ -1,6 +1,6 @@
 ﻿namespace Back.DTOs;
 
-public partial class ClienteDTO
+public class ClienteDTO
 {
     public int Id { get; set; }
 

@@ -45,7 +45,7 @@ public class ClienteArticuloService : IClienteArticuloService
   public async Task<bool> DeleteClienteArticulo(int idCompra, int idArticulo)
   {
     var clienteArticulo = await GetClienteArticulo(idCompra, idArticulo);
-    if (clienteArticulo == null)
+    if (clienteArticulo is null)
       return false;
 
     _dbContext.ClienteArticulos.Remove(clienteArticulo);

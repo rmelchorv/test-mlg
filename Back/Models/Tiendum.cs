@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Back.Models;
+﻿namespace Back.Models;
 
 public partial class Tiendum
 {

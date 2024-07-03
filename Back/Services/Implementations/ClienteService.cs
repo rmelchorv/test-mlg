@@ -38,7 +38,7 @@ public class ClienteService : IClienteService
   public async Task<bool> DeleteCliente(int id)
   {
     var cliente = await GetCliente(id);
-    if (cliente == null)
+    if (cliente is null)
       return false;
 
     _dbContext.Clientes.Remove(cliente);

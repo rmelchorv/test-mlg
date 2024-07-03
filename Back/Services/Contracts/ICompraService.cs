@@ -6,7 +6,7 @@ public interface ICompraService
 {
   Task<List<Compra>> GetCompras();
   Task<Compra> GetCompra(int id);
-  Task<Compra> InsertCompra(Compra compra);
+  Task<bool> InsertCompra(Compra compra);
   Task<bool> UpdateCompra(Compra compra);
   Task<bool> DeleteCompra(int id);
 }

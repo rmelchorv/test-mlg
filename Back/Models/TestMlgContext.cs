@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Back.Models;
 
@@ -27,7 +25,9 @@ public partial class TestMlgContext : DbContext
 
     public virtual DbSet<Tiendum> Tienda { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

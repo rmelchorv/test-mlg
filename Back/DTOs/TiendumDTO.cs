@@ -1,6 +1,6 @@
 ﻿namespace Back.DTOs;
 
-public partial class TiendumDTO
+public class TiendumDTO
 {
     public int Id { get; set; }
 
