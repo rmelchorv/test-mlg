@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{actionTitle}} artículo en tienda</h2>
+<mat-dialog-content  class="mat-typography">
+  <form [formGroup]="formArticuloTienda">
+    <mat-grid-list cols="1" rowHeight="85px">
+      <mat-grid-tile>
+        <mat-form-field floatLabel="always" appearance="outline">
+          <mat-label>Artículos</mat-label>
+          <mat-select [formControl]="articuloControl" formControlName="idArticulo" [required]="true">
+            @for (articulo of articulos; track articulo) {
+              <mat-option [value]="articulo.id">{{articulo.codigo}} | {{articulo.descripcion}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field floatLabel="always" appearance="outline">
+          <mat-label>Tiendas</mat-label>
+          <mat-select [formControl]="tiendaControl" formControlName="idTienda" [required]="true">
+            @for (tienda of tiendas; track tienda) {
+              <mat-option [value]="tienda.id">{{tienda.sucursal}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-form-field>
+          <mat-label>Fecha</mat-label>
+          <input matInput [matDatepicker]="picker">
+          <mat-hint>dd/MM/yyyy</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button [mat-dialog-close]="true" (click)="executeAction()" cdkFocusInitial>{{actionButton}}</button>
+</mat-dialog-actions>
